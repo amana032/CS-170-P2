@@ -56,7 +56,7 @@ def forward_selection_feature_search(data):
     best_feature_set_total = (None, None, 0) # The best feature set overall, to be returned
     current_set = [] # The current set of features, starts empty
     
-    print("Beginning search.\n")
+    print("\nBeginning search.\n")
 
     for i in range(1, len(data[0])):
         best_accuracy = 0
@@ -71,7 +71,8 @@ def forward_selection_feature_search(data):
                 #print(f"   - Accuracy: {round(accuracy*100, 2)}%")
 
                 tuple_temp = tuple(set(current_set + [k]))
-                print(f"     - Using feature(s) {tuple_temp} accuracy is {round(accuracy*100, 2)}%")
+                s = str(tuple_temp).replace("(", "{",).replace(")", "}").replace(",}", "}")
+                print(f"     - Using feature(s) {s} accuracy is {round(accuracy*100, 2)}%")
 
                 if accuracy > best_accuracy: # Is this feature better than the best feature so far?
                     best_accuracy = accuracy
@@ -86,11 +87,13 @@ def forward_selection_feature_search(data):
             t = (i, current_set.copy(), best_accuracy)
             best_set_per_level.append(t) # Keep a copy of this level in case it's the best
             #print(f"Added most significant feature {feature_to_add_this_level} on level {i} with accuracy {round(best_accuracy*100, 2)}%\n")
-            print(f"Feature set {t[1]} was best, accuracy is {round(t[2]*100, 2)}%\n")
+            s = str(t[1]).replace("[", "{").replace("]", "}")
+            print(f"Feature set {s} was best, accuracy is {round(t[2]*100, 2)}%\n")
 
     # Print the best feature set at each level
     for i in best_set_per_level:
-        print('Level', i[0], 'Feature Set:', i[1], ', Accuracy:', round(i[2]*100, 2), '%')
+        s = str(i[1]).replace("[", "{").replace("]", "}")
+        print('Level', i[0], 'Feature Set:', s, ', Accuracy:', round(i[2]*100, 2), '%')
         if i[2] > best_feature_set_total[2]: # Is this the best feature set so far? Update if so
             best_feature_set_total = i
 
@@ -98,7 +101,8 @@ def forward_selection_feature_search(data):
             if len(i[1]) < len(best_feature_set_total[1]):
                 best_feature_set_total = i
     
-    print(f"\nBest feature set: {best_feature_set_total[1]} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
+    s = str(best_feature_set_total[1]).replace("[", "{").replace("]", "}")
+    print(f"\nBest feature set: {s} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
     return best_feature_set_total # Best feature set and accuracy found!
 
 
@@ -124,7 +128,8 @@ def backwards_elimination_feature_search(data):
                 #print(f"   - Accuracy: {round(accuracy*100, 2)}%")
 
                 tuple_temp = tuple(set(current_set + [k]))
-                print(f"     - Using feature(s) {tuple_temp} accuracy is {round(accuracy*100, 2)}%")
+                s = str(tuple_temp).replace("(", "{",).replace(")", "}").replace(",}", "}")
+                print(f"     - Using feature(s) {s} accuracy is {round(accuracy*100, 2)}%")
 
                 if accuracy > best_accuracy: # Is this feature worse than the worst so far?
                     best_accuracy = accuracy
@@ -139,11 +144,14 @@ def backwards_elimination_feature_search(data):
             t = (i, current_set.copy(), best_accuracy)
             best_set_per_level.append(t) # Keep a copy of this level in case it's the best
             #print(f"Removed least significant feature {feature_to_remove_this_level} on level {i} to create set {current_set} with accuracy {round(best_accuracy*100, 2)}%\n")
-            print(f"Feature set {t[1]} was best, accuracy is {round(t[2]*100, 2)}%\n")
+            
+            s = str(t[1]).replace("[", "{").replace("]", "}")
+            print(f"Feature set {s} was best, accuracy is {round(t[2]*100, 2)}%\n")
 
     # Print the best feature set at each level
     for i in best_set_per_level:
-        print('Level', i[0], 'Feature set:', i[1], ', Accuracy:', round(i[2]*100, 2), '%')
+        s = str(i[1]).replace("[", "{").replace("]", "}")
+        print('Level', i[0], 'Feature set:', s, ', Accuracy:', round(i[2]*100, 2), '%')
         if i[2] > best_feature_set_total[2]: # Is this the best feature set so far? Update if so
             best_feature_set_total = i
 
@@ -151,18 +159,19 @@ def backwards_elimination_feature_search(data):
             if len(i[1]) < len(best_feature_set_total[1]):
                 best_feature_set_total = i
     
-    print(f"\nBest feature set: {best_feature_set_total[1]} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
+    s = str(best_feature_set_total[1]).replace("[", "{").replace("]", "}")
+    print(f"\nBest feature set: {s} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
     return best_feature_set_total # Best feature set and accuracy found!
 
 def main():
-    print("Welcome to the Alexis Manalastas' Feature Selection Algorithm.")
+    print("Welcome to Alexis Manalastas' Feature Selection Set Search.")
     data = split_data()
 
     if data is None:
         print("Exiting...")
         return
     
-    print("Type the number of the algorithm you want to run.")
+    print("\nType the number of the algorithm you want to run.")
     print("1) Forward Selection")
     print("2) Backward Elimination")
     print("3) Exit")
