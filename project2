@@ -4,19 +4,19 @@
 #f = open('CS170_Large_Data__94.txt', "r")
 #f = open('CS170_Small_Data__41.txt', "r")
 
-# Prompt the user for the file name
-data = input("Enter the name of the text file (including .txt extension): ")
-try:
-    with open(data, 'r') as dataset:
-        data = []
-        for line in dataset:
-            object_to_tuple = tuple(map(float, line.split()))
-            data.append(object_to_tuple)
-        dataset.close()
+def split_data():
+    data = input("Enter the name of the text file (including .txt extension): ")
+    try:
+        with open(data, 'r') as dataset:
+            data = []
+            for line in dataset:
+                object_to_tuple = tuple(map(float, line.split()))
+                data.append(object_to_tuple)
+            dataset.close()
+        return data
 
-except FileNotFoundError:
-    print("Error: File not found. Exiting...")
-
+    except FileNotFoundError:
+        print("Error: File not found. Please try again.")
 
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
     number_correct = 0
@@ -145,7 +145,38 @@ def backwards_elimination_feature_search(data):
     return best_feature_set_total # Best feature set and accuracy found!
 
 def main():
-    forward_selection_feature_search(data)
+    print("Welcome to the Alexis Manalastas' Feature Selection Algorithm.")
+    data = split_data()
+
+    if data is None:
+        print("Exiting...")
+        return
+    
+    print("Type the number of the algorithm you want to run.")
+    print("1) Forward Selection")
+    print("2) Backward Elimination")
+    print("3) Exit")
+
+    case = input("Selection: ")
+    while (True): # Sorry...
+        if int(case) == 1:
+            forward_selection_feature_search(data)
+            break
+        elif int(case) == 2:
+            backwards_elimination_feature_search(data)
+            break
+        elif int(case) == 3:
+            break
+        else:
+            print("Invalid input. Please try again.\n")
+
+            print("Type the number of the algorithm you want to run.")
+            print("1) Forward Selection")
+            print("2) Backward Elimination")
+            print("3) Exit")
+            case = input("Selection: ")
+
+    print("\nExiting...")
 
 # __name__
 if __name__=="__main__":
