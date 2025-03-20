@@ -98,7 +98,7 @@ def forward_selection_feature_search(data):
             if len(i[1]) < len(best_feature_set_total[1]):
                 best_feature_set_total = i
     
-    print(f"Best feature set: {best_feature_set_total[1]} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
+    print(f"\nBest feature set: {best_feature_set_total[1]} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
     return best_feature_set_total # Best feature set and accuracy found!
 
 
