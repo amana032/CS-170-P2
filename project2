@@ -56,6 +56,8 @@ def forward_selection_feature_search(data):
     best_feature_set_total = (None, None, 0) # The best feature set overall, to be returned
     current_set = [] # The current set of features, starts empty
     
+    print("Beginning search.\n")
+
     for i in range(1, len(data[0])):
         best_accuracy = 0
         feature_to_add_this_level = -1
@@ -64,9 +66,12 @@ def forward_selection_feature_search(data):
         
         for k in range(1, len(data[0])): # For each feature, check if it improves accuracy from the previous level set
             if k not in current_set: # Has this feature been added yet? Skip if so
-                print(f" - Considering adding feature {k}:")
+                #print(f" - Considering adding feature {k}:")
                 accuracy = leave_one_out_cross_validation(data, current_set, k) # Grab the accuracy of the feature set with this feature added
-                print(f"   - Accuracy: {round(accuracy*100, 2)}%")
+                #print(f"   - Accuracy: {round(accuracy*100, 2)}%")
+
+                tuple_temp = tuple(set(current_set + [k]))
+                print(f"     - Using feature(s) {tuple_temp} accuracy is {round(accuracy*100, 2)}%")
 
                 if accuracy > best_accuracy: # Is this feature better than the best feature so far?
                     best_accuracy = accuracy
@@ -78,9 +83,10 @@ def forward_selection_feature_search(data):
 
         else:
             current_set.append(feature_to_add_this_level) # Add the best feature to the current set
-            tuple = (i, current_set.copy(), best_accuracy)
-            best_set_per_level.append(tuple) # Keep a copy of this level in case it's the best
-            print(f"Added most significant feature {feature_to_add_this_level} on level {i} with accuracy {round(best_accuracy*100, 2)}%\n")
+            t = (i, current_set.copy(), best_accuracy)
+            best_set_per_level.append(t) # Keep a copy of this level in case it's the best
+            #print(f"Added most significant feature {feature_to_add_this_level} on level {i} with accuracy {round(best_accuracy*100, 2)}%\n")
+            print(f"Feature set {t[1]} was best, accuracy is {round(t[2]*100, 2)}%\n")
 
     # Print the best feature set at each level
     for i in best_set_per_level:
@@ -101,9 +107,9 @@ def backwards_elimination_feature_search(data):
     best_feature_set_total = (None, None, 0) # The best feature set overall, to be returned
     current_set = list(range(1, len(data[0]))) # Start with all features
 
-    tuple = (1, current_set.copy(), leave_one_out_cross_validation(data, current_set, -1)) # Accuracy of all features
-    best_set_per_level.append(tuple) # Keep a copy of this level in case it's the best
-    print(f"Starting with all features: {current_set} with accuracy {round(tuple[2]*100, 2)}%\n")
+    t = (1, current_set.copy(), leave_one_out_cross_validation(data, current_set, -1)) # Accuracy of all features
+    best_set_per_level.append(t) # Keep a copy of this level in case it's the best
+    print(f"\nBeginning search, starting with all features: {current_set} with accuracy {round(t[2]*100, 2)}%\n")
 
     for i in range(2, len(data[0])):
         best_accuracy = 0
@@ -113,9 +119,12 @@ def backwards_elimination_feature_search(data):
         
         for k in range(1, len(data[0])): # For each feature, check if it improves accuracy from the previous level set
             if k in current_set: # Only remove features in the current set
-                print(f" - Considering removing feature {k}:")
+                #print(f" - Considering removing feature {k}:")
                 accuracy = leave_one_out_cross_validation(data, current_set, k) # Grab the accuracy of the feature set with this feature removed
-                print(f"   - Accuracy: {round(accuracy*100, 2)}%")
+                #print(f"   - Accuracy: {round(accuracy*100, 2)}%")
+
+                tuple_temp = tuple(set(current_set + [k]))
+                print(f"     - Using feature(s) {tuple_temp} accuracy is {round(accuracy*100, 2)}%")
 
                 if accuracy > best_accuracy: # Is this feature worse than the worst so far?
                     best_accuracy = accuracy
@@ -127,9 +136,10 @@ def backwards_elimination_feature_search(data):
 
         else:
             current_set.remove(feature_to_remove_this_level) # Remove the best feature from the current set
-            tuple = (i, current_set.copy(), best_accuracy)
-            best_set_per_level.append(tuple) # Keep a copy of this level in case it's the best
-            print(f"Removed least significant feature {feature_to_remove_this_level} on level {i} to create set {current_set} with accuracy {round(best_accuracy*100, 2)}%\n")
+            t = (i, current_set.copy(), best_accuracy)
+            best_set_per_level.append(t) # Keep a copy of this level in case it's the best
+            #print(f"Removed least significant feature {feature_to_remove_this_level} on level {i} to create set {current_set} with accuracy {round(best_accuracy*100, 2)}%\n")
+            print(f"Feature set {t[1]} was best, accuracy is {round(t[2]*100, 2)}%\n")
 
     # Print the best feature set at each level
     for i in best_set_per_level:
@@ -141,7 +151,7 @@ def backwards_elimination_feature_search(data):
             if len(i[1]) < len(best_feature_set_total[1]):
                 best_feature_set_total = i
     
-    print(f"Best feature set: {best_feature_set_total[1]} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
+    print(f"\nBest feature set: {best_feature_set_total[1]} with accuracy {round(best_feature_set_total[2]*100, 2)}%")
     return best_feature_set_total # Best feature set and accuracy found!
 
 def main():
