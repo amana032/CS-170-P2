@@ -20,7 +20,12 @@ def split_data():
 
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
     number_correct = 0
-    selected_features = current_set + [feature_to_add]  # Add the new feature
+
+    
+    if feature_to_add == -1: # If we are removing a feature, don't add it
+        selected_features = current_set
+    else:
+        selected_features = current_set + [feature_to_add]  # Add the new feature
 
     for i, obj in enumerate(data): # The object we are classifying in the data set
         object_to_classify = [obj[j] for j in selected_features]  # Use only selected features
@@ -127,7 +132,7 @@ def backwards_elimination_feature_search(data):
                 accuracy = leave_one_out_cross_validation(data, current_set, k) # Grab the accuracy of the feature set with this feature removed
                 #print(f"   - Accuracy: {round(accuracy*100, 2)}%")
 
-                tuple_temp = tuple(set(current_set + [k]))
+                tuple_temp = tuple(x for x in current_set if x != k)
                 s = str(tuple_temp).replace("(", "{",).replace(")", "}").replace(",}", "}")
                 print(f"     - Using feature(s) {s} accuracy is {round(accuracy*100, 2)}%")
 
