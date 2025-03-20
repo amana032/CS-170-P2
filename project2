@@ -1,13 +1,22 @@
-import random
+# CS 170 Project 2
 
 # Read in data set and parse as tuples (class, feature 1, feature 2, etc.)
-f = open('CS170_Large_Data__94.txt', "r")
+#f = open('CS170_Large_Data__94.txt', "r")
 #f = open('CS170_Small_Data__41.txt', "r")
-data = []
-for line in f:
-     object_to_tuple = tuple(map(float, line.split()))
-     data.append(object_to_tuple)
-f.close()
+
+# Prompt the user for the file name
+data = input("Enter the name of the text file (including .txt extension): ")
+try:
+    with open(data, 'r') as dataset:
+        data = []
+        for line in dataset:
+            object_to_tuple = tuple(map(float, line.split()))
+            data.append(object_to_tuple)
+        dataset.close()
+
+except FileNotFoundError:
+    print("Error: File not found. Exiting...")
+
 
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
     number_correct = 0
